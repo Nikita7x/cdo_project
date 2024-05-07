@@ -27,7 +27,10 @@ class CarsViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment;filename=output.csv'
 
         writer = csv.writer(response, delimiter=';')
-        writer.writerow(serializer.data[0].keys())
+        try:
+            writer.writerow(serializer.data[0].keys())
+        except IndexError:
+            return Response(status=204)
 
         for item in serializer.data:
             writer.writerow(item.values())
